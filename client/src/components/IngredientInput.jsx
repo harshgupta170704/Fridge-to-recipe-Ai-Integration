@@ -57,13 +57,13 @@ const ALL_CATEGORIES = [
 ];
 
 const DIETARY_OPTIONS = [
-  { id:'Vegetarian',label:'Vegetarian',icon:'https://image.pollinations.ai/prompt/broccoli%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=10' },
-  { id:'Vegan',label:'Vegan',icon:'https://image.pollinations.ai/prompt/green%20leaf%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=11' },
-  { id:'Gluten-free',label:'Gluten-free',icon:'https://image.pollinations.ai/prompt/wheat%20sheaf%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=12' },
-  { id:'Dairy-free',label:'Dairy-free',icon:'https://image.pollinations.ai/prompt/coconut%20half%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=13' },
-  { id:'Low-carb',label:'Low-carb',icon:'https://image.pollinations.ai/prompt/avocado%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=14' },
-  { id:'Keto',label:'Keto',icon:'https://image.pollinations.ai/prompt/cheese%20wedge%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=15' },
-  { id:'Jain',label:'Jain',icon:'https://image.pollinations.ai/prompt/praying%20hands%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=16' },
+  { id:'Vegetarian',label:'Vegetarian',emoji:'🥗', bg:'from-emerald-100 to-emerald-50 dark:from-emerald-900/40 dark:to-emerald-900/10' },
+  { id:'Vegan',label:'Vegan',emoji:'🌱', bg:'from-green-100 to-green-50 dark:from-green-900/40 dark:to-green-900/10' },
+  { id:'Gluten-free',label:'Gluten-free',emoji:'🌾', bg:'from-amber-100 to-amber-50 dark:from-amber-900/40 dark:to-amber-900/10' },
+  { id:'Dairy-free',label:'Dairy-free',emoji:'🥥', bg:'from-stone-200 to-stone-100 dark:from-stone-700 dark:to-stone-800' },
+  { id:'Low-carb',label:'Low-carb',emoji:'🥑', bg:'from-lime-100 to-lime-50 dark:from-lime-900/40 dark:to-lime-900/10' },
+  { id:'Keto',label:'Keto',emoji:'🥩', bg:'from-rose-100 to-rose-50 dark:from-rose-900/40 dark:to-rose-900/10' },
+  { id:'Jain',label:'Jain',emoji:'🙏', bg:'from-orange-100 to-orange-50 dark:from-orange-900/40 dark:to-orange-900/10' },
 ];
 
 export function IngredientInput({
@@ -316,8 +316,8 @@ export function IngredientInput({
                     ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 shadow-sm shadow-emerald-200/50'
                     : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 hover:border-emerald-300 hover:bg-emerald-50/30'
                   }`}>
-                <div className="w-8 h-8 rounded-full overflow-hidden drop-shadow-sm mix-blend-multiply dark:mix-blend-normal">
-                  <img src={opt.icon} alt={opt.label} className="w-full h-full object-cover" />
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br ${opt.bg} shadow-sm border border-black/5 dark:border-white/5`}>
+                  <span className="text-[22px] drop-shadow-sm">{opt.emoji}</span>
                 </div>
                 <span className="text-[11px] font-semibold leading-none">{opt.label}</span>
                 {active && (
