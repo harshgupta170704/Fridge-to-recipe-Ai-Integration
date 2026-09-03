@@ -2,10 +2,11 @@ import { useState, useCallback, useRef, useMemo } from 'react';
 import { X, Sparkles, Loader2, ArrowRight } from 'lucide-react';
 
 const INGREDIENT_CATEGORIES = [
-  { id: 'protein', label: 'Proteins', items: ['chicken', 'paneer (पनीर)', 'eggs', 'tofu', 'fish', 'dal', 'chickpeas'] },
-  { id: 'vegetables', label: 'Veggies', items: ['onion', 'tomato', 'potato', 'spinach', 'peas', 'carrot', 'mushroom'] },
-  { id: 'dairy', label: 'Dairy', items: ['milk', 'butter', 'cheese', 'curd / yogurt', 'cream'] },
-  { id: 'grains', label: 'Grains', items: ['rice', 'wheat flour (आटा)', 'bread', 'pasta', 'oats'] },
+  { id: 'protein', label: 'Proteins', emoji: '🥩', items: ['chicken', 'paneer (पनीर)', 'eggs (अंडे)', 'tofu', 'fish', 'dal', 'chickpeas (छोले)'] },
+  { id: 'vegetables', label: 'Veggies', emoji: '🥬', items: ['onion', 'tomato', 'potato', 'spinach', 'peas', 'carrot', 'mushroom'] },
+  { id: 'dairy', label: 'Dairy', emoji: '🧀', items: ['milk', 'butter', 'cheese', 'curd / yogurt', 'cream'] },
+  { id: 'grains', label: 'Grains', emoji: '🌾', items: ['rice', 'wheat flour (आटा)', 'bread', 'pasta', 'oats'] },
+  { id: 'spices', label: 'Spices', emoji: '🫙', items: ['garlic', 'ginger', 'chili', 'turmeric', 'cumin', 'garam masala'] },
 ];
 
 function validateInput(text) {
@@ -83,26 +84,14 @@ export function IngredientInput({ onGenerate, loading, selectedItems, onToggleIt
         )}
       </div>
 
-      <div className="rounded-xl border bg-card text-card-foreground shadow-sm">
-        <div className="flex p-1 border-b overflow-x-auto hide-scrollbar">
-          {INGREDIENT_CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setActiveCategory(cat.id)}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
-                activeCategory === cat.id ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-        
-        <div className="p-4">
-          {activeCategoryData && (
+      <div className="space-y-6">
+        {INGREDIENT_CATEGORIES.map((cat) => (
+          <div key={cat.id} className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+              <span>{cat.emoji}</span> {cat.label}
+            </h3>
             <div className="flex flex-wrap gap-2">
-              {activeCategoryData.items.map((item) => {
+              {cat.items.map((item) => {
                 const cleanName = item.split('(')[0].trim().split('/')[0].trim();
                 const isSelected = selectedItems.has(cleanName);
                 return (
@@ -110,19 +99,20 @@ export function IngredientInput({ onGenerate, loading, selectedItems, onToggleIt
                     key={item}
                     type="button"
                     onClick={() => onToggleItem(cleanName)}
-                    className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                    className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                       isSelected 
-                        ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80' 
-                        : 'border-input bg-background hover:bg-accent hover:text-accent-foreground'
+                        ? 'border-primary bg-primary/10 text-primary hover:bg-primary/20' 
+                        : 'border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground'
                     }`}
                   >
+                    {isSelected && <span className="mr-1.5 text-primary">✓</span>}
                     {item}
                   </button>
                 );
               })}
             </div>
-          )}
-        </div>
+          </div>
+        ))}
       </div>
     </form>
   );
