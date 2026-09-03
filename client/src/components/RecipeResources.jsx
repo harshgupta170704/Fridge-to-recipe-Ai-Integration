@@ -56,21 +56,23 @@ export function RecipeResources({ recipe }) {
       <h3 className="section-title">
         🔗 Learn More
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      <div className="flex flex-col gap-3">
         {links.map((link) => (
           <a
             key={link.label}
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-200 group ${link.color}`}
+            className={`flex items-center gap-3.5 p-3.5 rounded-2xl border transition-all duration-200 group ${link.color}`}
           >
-            <div className="flex-shrink-0">{link.icon}</div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold leading-tight">{link.label}</p>
-              <p className="text-[11px] opacity-70 leading-tight mt-0.5 truncate">{link.subtitle}</p>
+            <div className="flex-shrink-0 bg-white/50 dark:bg-black/20 p-2 rounded-xl">
+              {link.icon}
             </div>
-            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold leading-tight mb-0.5">{link.label}</p>
+              <p className="text-xs opacity-80 leading-tight truncate">{link.subtitle}</p>
+            </div>
+            <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity flex-shrink-0" />
           </a>
         ))}
       </div>
