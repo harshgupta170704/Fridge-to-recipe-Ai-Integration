@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ShoppingBag, Ban, Leaf, Lightbulb, Check, Plus, X } from 'lucide-react';
+import { ShoppingBag, Ban, Leaf, Lightbulb, Check, Plus, X, AlertCircle } from 'lucide-react';
+import { validateIngredient } from '../utils/ingredientValidator';
 
 const EMOJI_MAP = {
   chicken: '🍗', eggs: '🥚', tomato: '🍅', potato: '🥔', onion: '🧅',
@@ -29,16 +30,30 @@ export function FilterPanel({
   onDietaryChange,     // (string => void)
 }) {
   const [excludeInput, setExcludeInput] = useState('');
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const excludedArray = excludedItems instanceof Set ? [...excludedItems] : [];
 
   const addExclusion = (val) => {
-    const clean = val.trim().toLowerCase();
+    const clean = val.trim();
     if (!clean) return;
-    if (!excludedItems.has(clean)) {
-      onExcludedChange(prev => new Set([...prev, clean]));
+    
+    const result = validateIngredient(clean);
+    
+    if (!result.valid) {
+      if (result.suggestion) {
+        setErrorMsg(`Did you mean "${result.suggestion}"?`);
+      } else {
+        setErrorMsg(`"${clean}" isn't a food ingredient.`);
+      }
+      return;
+    }
+
+    if (!excludedItems.has(result.ingredient)) {
+      onExcludedChange(prev => new Set([...prev, result.ingredient]));
     }
     setExcludeInput('');
+    setErrorMsg(null);
   };
 
   const removeExclusion = (item) => {
@@ -52,6 +67,11 @@ export function FilterPanel({
   const handleExcludeSubmit = (e) => {
     e.preventDefault();
     addExclusion(excludeInput);
+  };
+
+  const handleInputChange = (e) => {
+    setExcludeInput(e.target.value);
+    if (errorMsg) setErrorMsg(null);
   };
 
   /* Ingredients display — max 5 circles + overflow counter */
@@ -109,11 +129,10 @@ export function FilterPanel({
           <input
             type="text"
             value={excludeInput}
-            onChange={(e) => setExcludeInput(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Add ingredients to exclude..."
-            className="w-full h-10 pl-4 pr-11 rounded-xl border border-stone-200 dark:border-stone-700
-              bg-stone-50 dark:bg-stone-800/50 text-sm text-stone-700 dark:text-stone-300
-              placeholder:text-stone-400 focus:outline-none focus:border-stone-300 dark:focus:border-stone-600 transition-colors"
+            className={`w-full h-10 pl-4 pr-11 rounded-xl border bg-stone-50 dark:bg-stone-800/50 text-sm text-stone-700 dark:text-stone-300 placeholder:text-stone-400 focus:outline-none transition-colors
+              ${errorMsg ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-stone-200 dark:border-stone-700 focus:border-stone-300 dark:focus:border-stone-600'}`}
           />
           <button type="submit" disabled={!excludeInput.trim()}
             className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center
@@ -122,6 +141,13 @@ export function FilterPanel({
             <Plus className="w-4 h-4" />
           </button>
         </form>
+
+        {errorMsg && (
+          <div className="flex items-start gap-1.5 mb-3 text-red-600 dark:text-red-400">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+            <p className="text-[13px] leading-tight font-medium">{errorMsg}</p>
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-2">
           {excludedArray.map((item) => (
