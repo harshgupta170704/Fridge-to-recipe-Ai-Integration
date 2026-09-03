@@ -3,6 +3,8 @@
 
 A React app that turns your fridge ingredients into a complete, interactive recipe using AI. Not a chatbot — the AI returns structured JSON that powers beautiful, interactive UI components.
 
+**🌟 [Try the Live Demo Here!](https://fridge-to-recipe-ai-integration.onrender.com/) 🌟**
+
 ![React](https://img.shields.io/badge/React-18-blue) ![Vite](https://img.shields.io/badge/Vite-6-purple) ![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan) ![Groq](https://img.shields.io/badge/Groq-GPT_OSS_120B-orange)
 
 ## 📸 Screenshots
