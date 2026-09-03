@@ -57,13 +57,13 @@ const ALL_CATEGORIES = [
 ];
 
 const DIETARY_OPTIONS = [
-  { id:'Vegetarian',label:'Vegetarian',icon:'https://image.pollinations.ai/prompt/fresh%20broccoli%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
-  { id:'Vegan',label:'Vegan',icon:'https://image.pollinations.ai/prompt/fresh%20plant%20sprout%20in%20soil%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
-  { id:'Gluten-free',label:'Gluten-free',icon:'https://image.pollinations.ai/prompt/wheat%20stalk%20crossed%20out%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
-  { id:'Dairy-free',label:'Dairy-free',icon:'https://image.pollinations.ai/prompt/glass%20of%20almond%20milk%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
-  { id:'Low-carb',label:'Low-carb',icon:'https://image.pollinations.ai/prompt/half%20avocado%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
-  { id:'Keto',label:'Keto',icon:'https://image.pollinations.ai/prompt/piece%20of%20steak%20meat%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
-  { id:'Jain',label:'Jain',icon:'https://image.pollinations.ai/prompt/praying%20hands%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Vegetarian',label:'Vegetarian',icon:'https://image.pollinations.ai/prompt/broccoli%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=10' },
+  { id:'Vegan',label:'Vegan',icon:'https://image.pollinations.ai/prompt/green%20leaf%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=11' },
+  { id:'Gluten-free',label:'Gluten-free',icon:'https://image.pollinations.ai/prompt/wheat%20sheaf%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=12' },
+  { id:'Dairy-free',label:'Dairy-free',icon:'https://image.pollinations.ai/prompt/coconut%20half%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=13' },
+  { id:'Low-carb',label:'Low-carb',icon:'https://image.pollinations.ai/prompt/avocado%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=14' },
+  { id:'Keto',label:'Keto',icon:'https://image.pollinations.ai/prompt/cheese%20wedge%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=15' },
+  { id:'Jain',label:'Jain',icon:'https://image.pollinations.ai/prompt/praying%20hands%203d%20icon%20white%20background?width=100&height=100&nologo=true&seed=16' },
 ];
 
 export function IngredientInput({
