@@ -23,7 +23,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
 
   return (
     <>
-      <div className="rounded-xl border bg-card text-card-foreground shadow animate-slide-up overflow-hidden">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm overflow-hidden animate-slide-up">
         {/* Warning banner for Zod errors */}
         {warnings && warnings.length > 0 && (
           <div className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200/60 dark:border-amber-800/60 px-5 py-3 flex items-start gap-2.5">
@@ -35,12 +35,12 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
           </div>
         )}
 
-        {/* Decorative Top Gradient */}
-        <div className="h-2 w-full bg-gradient-to-r from-brand-400 via-orange-400 to-rose-400"></div>
+        {/* Decorative Top Bar */}
+        <div className="h-1 w-full bg-[#FF8A4C]"></div>
 
         <div className="p-5 sm:p-7 space-y-8">
           {/* Header Section */}
-          <div className="space-y-4 border-b border-stone-100 dark:border-stone-800 pb-6">
+          <div className="space-y-4 border-b border-stone-200 dark:border-stone-800 pb-6">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-800 dark:text-stone-100 tracking-tight leading-tight mb-2">
@@ -54,11 +54,11 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
               </div>
               <button
                 onClick={onClear}
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground px-4 py-2 flex-shrink-0 p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                className="inline-flex items-center justify-center text-sm font-medium transition-colors flex-shrink-0 p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800"
                 title="Start over"
                 aria-label="Start over"
               >
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw className="w-5 h-5 text-stone-500" />
               </button>
             </div>
 
@@ -69,21 +69,21 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
               </span>
               
               {(recipe.prepTime && recipe.prepTime !== 'N/A') && (
-                <span className="inline-flex items-center gap-1.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 shadow-sm px-3 py-1.5 rounded-xl text-[13px] font-medium text-stone-600 dark:text-stone-300">
-                  <Clock className="w-4 h-4 text-brand-500" /> 
+                <span className="inline-flex items-center gap-1.5 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 shadow-sm px-3 py-1.5 rounded-xl text-[13px] font-medium text-stone-600 dark:text-stone-300">
+                  <Clock className="w-4 h-4 text-orange-500" /> 
                   <span className="text-stone-400 mr-0.5">Prep:</span> {recipe.prepTime}
                 </span>
               )}
               
               {(recipe.cookTime && recipe.cookTime !== 'N/A') && (
-                <span className="inline-flex items-center gap-1.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 shadow-sm px-3 py-1.5 rounded-xl text-[13px] font-medium text-stone-600 dark:text-stone-300">
+                <span className="inline-flex items-center gap-1.5 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 shadow-sm px-3 py-1.5 rounded-xl text-[13px] font-medium text-stone-600 dark:text-stone-300">
                   <CookingPot className="w-4 h-4 text-orange-500" /> 
                   <span className="text-stone-400 mr-0.5">Cook:</span> {recipe.cookTime}
                 </span>
               )}
               
               {recipe.cuisine && (
-                <span className="inline-flex items-center gap-1.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 shadow-sm px-3 py-1.5 rounded-xl text-[13px] font-medium text-stone-600 dark:text-stone-300">
+                <span className="inline-flex items-center gap-1.5 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 shadow-sm px-3 py-1.5 rounded-xl text-[13px] font-medium text-stone-600 dark:text-stone-300">
                   <Globe className="w-4 h-4 text-blue-500" /> {recipe.cuisine}
                 </span>
               )}
@@ -93,15 +93,13 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
           {/* Grid Layout for Nutrition and Servings on Desktop */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Ingredients Side */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2 flex items-center gap-2 mb-0">
-                  <Utensils className="w-5 h-5 text-brand-500" />
-                  Ingredients
-                </h3>
-              </div>
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-100 flex items-center gap-2">
+                <Utensils className="w-5 h-5 text-orange-500" />
+                Ingredients
+              </h3>
               
-              <div className="bg-stone-50 dark:bg-stone-900/50 p-4 sm:p-5 rounded-2xl border border-stone-100 dark:border-stone-800">
+              <div className="bg-stone-50 dark:bg-stone-900/50 p-4 sm:p-5 rounded-xl border border-stone-200 dark:border-stone-800">
                 <div className="mb-4 pb-4 border-b border-stone-200 dark:border-stone-700">
                   <ServingScaler
                     currentServings={currentServings}
@@ -117,24 +115,24 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
             {/* Nutrition & Resources Side */}
             <div className="space-y-6">
               {recipe.nutrition && (
-                <div className="bg-white dark:bg-stone-900 p-4 sm:p-5 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm">
+                <div className="bg-stone-50 dark:bg-stone-900/50 p-4 sm:p-5 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm">
                   <NutritionBadge nutrition={recipe.nutrition} />
                 </div>
               )}
               
-              <div className="bg-white dark:bg-stone-900 p-4 sm:p-5 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm">
+              <div className="bg-stone-50 dark:bg-stone-900/50 p-4 sm:p-5 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm">
                 <RecipeResources recipe={recipe} />
               </div>
             </div>
           </div>
 
           {/* Steps */}
-          <div className="pt-4 border-t border-stone-100 dark:border-stone-800">
-            <h3 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2 flex items-center gap-2">
+          <div className="pt-4 border-t border-stone-200 dark:border-stone-800">
+            <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-100 flex items-center gap-2 mb-4">
               <ChefHat className="w-5 h-5 text-orange-500" />
               Instructions
             </h3>
-            <div className="bg-white dark:bg-stone-900 p-1 sm:p-5 rounded-2xl">
+            <div className="bg-stone-50 dark:bg-stone-900/50 p-1 sm:p-5 rounded-xl border border-stone-200 dark:border-stone-800">
               <StepChecklist
                 steps={recipe.steps}
                 timer={timer}
@@ -147,7 +145,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
           <div className="pt-2">
             <button
               onClick={() => setCookingMode(true)}
-              className="w-full bg-gradient-to-r from-brand-600 to-orange-500 hover:from-brand-500 hover:to-orange-400 text-white shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2.5 py-4 rounded-2xl font-bold text-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full bg-[#FF8A4C] hover:bg-[#FF6D1F] text-white shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2.5 py-4 rounded-xl font-bold text-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
             >
               <CookingPot className="w-6 h-6" />
               Start Cooking Mode
@@ -155,8 +153,8 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
           </div>
 
           {/* Refinement */}
-          <div className="pt-6 border-t border-stone-100 dark:border-stone-800">
-            <h3 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2 text-center text-stone-500 dark:text-stone-400">
+          <div className="pt-6 border-t border-stone-200 dark:border-stone-800">
+            <h3 className="text-lg font-semibold text-center text-stone-600 dark:text-stone-400 mb-4">
               Not quite right? Ask AI to tweak it
             </h3>
             <div className="max-w-xl mx-auto">

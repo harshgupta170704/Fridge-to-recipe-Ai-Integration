@@ -199,6 +199,8 @@ export default function App() {
                 selectedIngredients={selectedArray}
                 excludedItems={excludedItems}
                 onExcludedChange={setExcludedItems}
+                dietary={dietary}
+                onDietaryChange={handleDietaryChange}
               />
             </div>
           </div>
