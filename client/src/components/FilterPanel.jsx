@@ -137,39 +137,7 @@ export function FilterPanel({
         </div>
       </div>
 
-      {/* ── Card 3: Dietary Preference ───────────────────────── */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm p-5">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
-            <Leaf className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-stone-900 dark:text-stone-100 text-[15px]">Dietary Preference</h3>
-            <p className="text-sm text-stone-500 dark:text-stone-400">Select your dietary preference</p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {DIETARY_OPTIONS.map((opt) => {
-            const isSelected = dietary === opt;
-            return (
-              <button key={opt}
-                onClick={() => onDietaryChange(isSelected ? '' : opt)}
-                className={`inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-[13px] font-medium transition-all
-                  ${isSelected
-                    ? 'bg-emerald-500 text-white shadow-sm'
-                    : 'bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-emerald-300'
-                  }`}
-              >
-                {isSelected && <Check className="w-3.5 h-3.5" />}
-                {opt}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Card 4: Tip ──────────────────────────────────────── */}
+      {/* ── Card 3: Tip ──────────────────────────────────────── */}
       <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-200 dark:border-emerald-800/40 p-5">
         <div className="flex gap-3">
           <Lightbulb className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />

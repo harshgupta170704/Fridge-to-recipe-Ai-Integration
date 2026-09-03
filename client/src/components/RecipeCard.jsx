@@ -183,10 +183,14 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
                 </div>
               </div>
 
-              {/* Placeholder food image */}
-              <div className="hidden sm:block relative flex-shrink-0 w-[220px] h-[160px] rounded-2xl overflow-hidden bg-gradient-to-br from-orange-100 to-amber-50 dark:from-stone-800 dark:to-stone-700 border border-stone-200 dark:border-stone-700">
-                <div className="absolute inset-0 flex items-center justify-center text-6xl">🍽️</div>
-                <div className="absolute top-2 right-2 bg-white dark:bg-stone-800 rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm border border-stone-200 dark:border-stone-700">
+              {/* AI-generated food image */}
+              <div className="hidden sm:block relative flex-shrink-0 w-[220px] h-[160px] rounded-2xl overflow-hidden bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-sm">
+                <img 
+                  src={`https://image.pollinations.ai/prompt/${encodeURIComponent(recipe.title + ' delicious plated food meal, professional food photography')}?width=400&height=300&nologo=true`} 
+                  alt={recipe.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm dark:bg-stone-900/90 rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm border border-stone-200 dark:border-stone-700">
                   <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                   <span className="text-xs font-bold text-stone-700 dark:text-stone-200">4.8</span>
                 </div>
@@ -266,29 +270,37 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
                         : 'border-stone-200 dark:border-stone-800 hover:border-orange-200'
                       }`}>
                     <div className="flex gap-4">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5
                         ${done
                           ? 'bg-emerald-100 text-emerald-600'
                           : 'bg-[#FF8A4C] text-white'
                         }`}>
                         {done ? '✓' : i + 1}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-1">
+                      <div className="flex-1 min-w-0 pr-2">
+                        <div className="flex items-center gap-3 mb-1.5">
                           <h3 className={`font-semibold text-[15px] ${done ? 'line-through text-stone-400' : 'text-stone-900 dark:text-stone-100'}`}>
                             {title}.
                           </h3>
                           {step.durationMinutes > 0 && (
-                            <span className="inline-flex items-center gap-1 text-xs text-stone-400 bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded-full">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-stone-500 bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded-full">
                               <Clock className="w-3 h-3" /> {step.durationMinutes} min
                             </span>
                           )}
                         </div>
                         {body && (
-                          <p className={`text-sm leading-relaxed ${done ? 'text-stone-400' : 'text-stone-500 dark:text-stone-400'}`}>
+                          <p className={`text-[13px] leading-relaxed ${done ? 'text-stone-400' : 'text-stone-500 dark:text-stone-400'}`}>
                             {body}
                           </p>
                         )}
+                      </div>
+                      {/* Step image */}
+                      <div className="hidden sm:block w-[100px] h-[72px] rounded-xl overflow-hidden flex-shrink-0 bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
+                        <img 
+                          src={`https://image.pollinations.ai/prompt/${encodeURIComponent(title + ' cooking preparation step macro photography')}?width=200&height=144&nologo=true&seed=${i}`}
+                          alt={title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                     </div>
                   </div>
