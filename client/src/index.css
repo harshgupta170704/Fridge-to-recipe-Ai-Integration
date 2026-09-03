@@ -59,14 +59,13 @@
 
   .ingredient-category-btn {
     @apply flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl border-2 border-transparent
-           bg-stone-50 dark:bg-stone-800/50 hover:bg-brand-50 dark:hover:bg-brand-950/20
-           hover:border-brand-300 dark:hover:border-brand-700
+           bg-stone-50 hover:bg-amber-50
            transition-all duration-200 cursor-pointer text-center min-w-[72px];
   }
 
   .ingredient-category-btn.active {
-    @apply bg-brand-50 dark:bg-brand-950/30 border-brand-400 dark:border-brand-600
-           shadow-sm shadow-brand-100 dark:shadow-brand-950/20;
+    @apply bg-amber-50 border-amber-400
+           shadow-sm;
   }
 }
 
