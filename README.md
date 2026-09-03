@@ -150,6 +150,24 @@ fridge-to-recipe/
 5. **Print view** — clean CSS print layout
 6. **PWA** — installable, offline-capable with cached recipes
 
+## 🚀 Deployment (Recommended: Render.com)
+
+This app is configured to be easily deployed as a **single Web Service** on [Render](https://render.com), which will protect your API key and allow others to use the app securely.
+
+1. Create a GitHub repository and push this code to it.
+2. Sign up for [Render.com](https://render.com) and click **New+** -> **Web Service**.
+3. Connect your GitHub account and select your repository.
+4. Use the following settings:
+   - **Environment:** `Node`
+   - **Build Command:** `npm run build`
+   - **Start Command:** `npm start`
+5. Scroll down to **Environment Variables** and add:
+   - `GROQ_API_KEY`: `your_api_key_here` (This stays secure on the server!)
+   - `NODE_ENV`: `production`
+6. Click **Create Web Service**. 
+
+Render will automatically build the React frontend and start the Express server, serving both from the same URL!
+
 ## ⏱️ Time Spent
 
 | Phase | Hours |

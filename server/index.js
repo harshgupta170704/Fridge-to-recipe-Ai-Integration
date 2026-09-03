@@ -2,16 +2,28 @@ import express from "express";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import { generateRecipe, refineRecipe } from "./gemini.js";
 
-dotenv.config({ path: "../.env" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// In production, environment variables are set by the host (e.g., Render)
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: "../.env" });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+// Allow CORS for local development, but in production they are on the same origin
 app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"] }));
 app.use(express.json());
+
+// Serve static files from the React app in production
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
 // Rate limiting: 10 requests per minute per IP
 const limiter = rateLimit({
@@ -93,8 +105,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "An unexpected error occurred." });
 });
 
+// The "catchall" handler: for any request that doesn't
+// match an API route above, send back React's index.html file.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   if (!process.env.GROQ_API_KEY) {
     console.warn("WARNING: GROQ_API_KEY is not set. API calls will fail.");
   }
