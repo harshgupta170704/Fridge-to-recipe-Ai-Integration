@@ -18,43 +18,31 @@
   }
 
   .btn-secondary {
-    @apply bg-stone-100 hover:bg-stone-200 text-stone-700 dark:bg-stone-800 dark:hover:bg-stone-700
-           dark:text-stone-200 font-medium py-2.5 px-5 rounded-xl transition-all duration-200
-           active:scale-[0.97] border border-stone-200 dark:border-stone-700;
+    @apply bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 font-bold rounded-2xl border border-orange-200 dark:border-orange-800/50 hover:bg-orange-100 dark:hover:bg-orange-900/50 active:scale-95 transition-all duration-200;
   }
 
   .btn-ghost {
-    @apply text-stone-500 hover:text-stone-700 hover:bg-stone-100 dark:text-stone-400
-           dark:hover:text-stone-200 dark:hover:bg-stone-800 py-2 px-3 rounded-xl
-           transition-all duration-200;
-  }
-
-  .card {
-    @apply bg-white dark:bg-stone-900 rounded-3xl shadow-sm
-           border border-stone-100 dark:border-stone-800 overflow-hidden;
-  }
-
-  .card-elevated {
-    @apply bg-white dark:bg-stone-900 rounded-3xl shadow-xl shadow-stone-200/50
-           dark:shadow-stone-950/50 border border-stone-100 dark:border-stone-800 overflow-hidden;
-  }
-
-  .chip {
-    @apply inline-flex items-center gap-1.5 bg-brand-50 text-brand-700 dark:bg-brand-950/30
-           dark:text-brand-300 text-sm font-medium py-1.5 px-3.5 rounded-full
-           border border-brand-200/50 dark:border-brand-800/30;
+    @apply text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl px-4 py-2 font-medium transition-colors;
   }
 
   .input-field {
-    @apply w-full bg-stone-50 dark:bg-stone-800/50 border-2 border-stone-200 dark:border-stone-700
-           rounded-2xl px-4 py-3.5 text-stone-800 dark:text-stone-100 text-base
-           placeholder-stone-400 dark:placeholder-stone-500
-           focus:outline-none focus:ring-0 focus:border-brand-500 dark:focus:border-brand-500
-           transition-all duration-200;
+    @apply w-full bg-stone-50/50 dark:bg-stone-900/50 border-2 border-stone-100 dark:border-stone-800 rounded-2xl px-5 py-4 focus:outline-none focus:border-orange-400 dark:focus:border-orange-500 focus:bg-white dark:focus:bg-stone-900 transition-all text-stone-800 dark:text-stone-100 placeholder-stone-400;
   }
 
   .section-title {
-    @apply text-[11px] font-bold uppercase tracking-[0.1em] text-stone-400 dark:text-stone-500 mb-3 flex items-center gap-2;
+    @apply text-lg font-extrabold text-stone-800 dark:text-stone-100 mb-4 flex items-center gap-2;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-rose-500;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors;
+  }
+
+  .ingredient-tag {
+    @apply cursor-pointer select-none active:scale-95 transition-transform;
   }
 
   .ingredient-category-btn {
