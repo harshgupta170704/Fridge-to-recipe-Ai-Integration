@@ -3,7 +3,7 @@ import { z } from 'zod';
 // Swap option schema
 const SwapOptionSchema = z.object({
   name: z.string().min(1, "Swap name required"),
-  reason: z.string().default(""),
+  reason: z.string().nullable().transform(v => v ?? "").default(""),
 });
 
 // Ingredient schema
@@ -21,7 +21,7 @@ const StepSchema = z.object({
   stepNumber: z.number().int().positive().default(1),
   instruction: z.string().min(1, "Step instruction required"),
   durationMinutes: z.number().min(0).nullable().default(null),
-  tip: z.string().default(""),
+  tip: z.string().nullable().transform(v => v ?? "").default(""),
 });
 
 // Nutrition schema
