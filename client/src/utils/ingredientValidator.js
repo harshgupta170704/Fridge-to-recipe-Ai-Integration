@@ -99,8 +99,8 @@ export function validateIngredient(input) {
 
   for (const ing of KNOWN_INGREDIENTS) {
     const dist = levenshtein(clean, ing);
-    // Allow up to 2 edits for short words, 3 for longer
-    const threshold = clean.length <= 4 ? 2 : 3;
+    // Strict thresholds: 1 typo for short words (<=4 chars), 2 for longer words
+    const threshold = clean.length <= 4 ? 1 : 2;
     if (dist < bestDist && dist <= threshold) {
       bestDist = dist;
       bestMatch = ing;

@@ -57,13 +57,13 @@ const ALL_CATEGORIES = [
 ];
 
 const DIETARY_OPTIONS = [
-  { id:'Vegetarian',label:'Vegetarian',icon:'🌿' },
-  { id:'Vegan',label:'Vegan',icon:'🌱' },
-  { id:'Gluten-free',label:'Gluten-free',icon:'🌾' },
-  { id:'Dairy-free',label:'Dairy-free',icon:'🥛' },
-  { id:'Low-carb',label:'Low-carb',icon:'🥑' },
-  { id:'Keto',label:'Keto',icon:'🥩' },
-  { id:'Jain',label:'Jain',icon:'🙏' },
+  { id:'Vegetarian',label:'Vegetarian',icon:'https://image.pollinations.ai/prompt/fresh%20broccoli%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Vegan',label:'Vegan',icon:'https://image.pollinations.ai/prompt/fresh%20plant%20sprout%20in%20soil%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Gluten-free',label:'Gluten-free',icon:'https://image.pollinations.ai/prompt/wheat%20stalk%20crossed%20out%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Dairy-free',label:'Dairy-free',icon:'https://image.pollinations.ai/prompt/glass%20of%20almond%20milk%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Low-carb',label:'Low-carb',icon:'https://image.pollinations.ai/prompt/half%20avocado%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Keto',label:'Keto',icon:'https://image.pollinations.ai/prompt/piece%20of%20steak%20meat%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
+  { id:'Jain',label:'Jain',icon:'https://image.pollinations.ai/prompt/praying%20hands%20illustration,%203d%20icon%20style,%20white%20background?width=100&height=100&nologo=true' },
 ];
 
 export function IngredientInput({
@@ -132,74 +132,80 @@ export function IngredientInput({
 
   return (
     <div className="space-y-7">
-      {/* ── Hero ────────────────────────────────────────── */}
-      <div>
-        <h1 className="text-[28px] sm:text-[36px] font-bold text-stone-900 dark:text-white tracking-tight leading-tight">
-          What's in your fridge? <span className="inline-block">🥕</span>
-        </h1>
-        <p className="mt-2 text-[15px] text-stone-500 dark:text-stone-400">
-          Add the ingredients you have, and we'll find delicious recipes for you.
-        </p>
-      </div>
+      {/* ── Premium Hero Banner ──────────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-[2rem] bg-stone-900 shadow-2xl mb-10">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://image.pollinations.ai/prompt/fresh%20ingredients,%20vegetables,%20spices%20on%20a%20dark%20slate%20kitchen%20counter,%20professional%20food%20photography,%20dramatic%20lighting?width=1200&height=400&nologo=true" 
+            alt="Fresh ingredients" 
+            className="w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-stone-900/90 via-stone-900/60 to-transparent"></div>
+        </div>
 
-      {/* ── Search bar ──────────────────────────────────── */}
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div className="relative flex items-center">
-            <Search className="absolute left-4 sm:left-5 w-5 h-5 text-stone-400 pointer-events-none" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={text}
-              onChange={(e) => { setText(e.target.value); clearMessages(); }}
-              onKeyDown={handleKeyDown}
-              placeholder="Type ingredients e.g., chicken, tomato, onion..."
-              disabled={loading}
-              className={`w-full h-14 sm:h-[60px] pl-12 sm:pl-14 pr-40 sm:pr-48 rounded-2xl
-                border-2 bg-white dark:bg-stone-900
-                outline-none text-[15px] text-stone-800 dark:text-stone-100
-                placeholder:text-stone-400 transition-all
-                ${inputError
-                  ? 'border-red-300 focus:border-red-400 focus:ring-4 focus:ring-red-100'
-                  : 'border-stone-200 dark:border-stone-700 focus:border-[#FF8A4C] focus:ring-4 focus:ring-[#FF8A4C]/10'
-                }`}
-            />
-            <button type="button"
-              onClick={text.trim() ? handleSubmit : onGenerate}
-              disabled={loading || (!text.trim() && selectedItems.size === 0)}
-              className="absolute right-2.5 h-10 sm:h-11 px-5 sm:px-6
-                bg-[#FF8A4C] hover:bg-[#E86F32] active:bg-[#C74A00]
-                disabled:opacity-40 disabled:cursor-not-allowed
-                text-white font-semibold text-[14px]
-                rounded-xl shadow-md shadow-orange-300/30
-                transition-all flex items-center gap-2">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <SparkleIcon />}
-              <span className="whitespace-nowrap">{text.trim() ? 'Add' : 'Find Recipes'}</span>
-            </button>
-          </div>
-        </form>
+        {/* Hero Content */}
+        <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-14 max-w-2xl">
+          <h1 className="text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
+            What's in your fridge? <span className="inline-block animate-bounce-slow">🥕</span>
+          </h1>
+          <p className="text-stone-300 text-[15px] sm:text-lg mb-8 max-w-lg">
+            Add the ingredients you have on hand, and our AI chef will instantly generate delicious recipes for you to cook right now.
+          </p>
 
-        {/* Error / suggestion message */}
-        {inputError && (
-          <div className="mt-2.5 flex items-start gap-2 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/40 rounded-xl px-4 py-3">
-            <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <p className="text-sm text-red-700 dark:text-red-400">{inputError.message}</p>
-              {inputError.suggestion && (
-                <button onClick={applySuggestion}
-                  className="mt-1.5 text-sm font-semibold text-[#FF8A4C] hover:text-[#E86F32] transition-colors">
-                  ✓ Yes, add "{inputError.suggestion}" →
-                </button>
-              )}
+          {/* Search bar inside Hero */}
+          <form onSubmit={handleSubmit} className="relative max-w-xl group">
+            <div className="absolute inset-0 bg-white/20 dark:bg-black/20 rounded-2xl blur-md transition-all group-hover:bg-[#FF8A4C]/20"></div>
+            <div className="relative flex items-center bg-white dark:bg-stone-900/95 backdrop-blur-xl rounded-2xl border-2 border-white/20 dark:border-stone-700 p-1.5 shadow-xl transition-all focus-within:border-[#FF8A4C] focus-within:ring-4 focus-within:ring-[#FF8A4C]/20">
+              <Search className="absolute left-4 w-5 h-5 text-stone-400 pointer-events-none" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={text}
+                onChange={(e) => { setText(e.target.value); clearMessages(); }}
+                onKeyDown={handleKeyDown}
+                placeholder="Type ingredients e.g., chicken, tomato..."
+                disabled={loading}
+                className="w-full h-12 sm:h-14 pl-12 pr-32 bg-transparent outline-none text-[15px] text-stone-800 dark:text-stone-100 placeholder:text-stone-400"
+              />
+              <button type="button"
+                onClick={text.trim() ? handleSubmit : onGenerate}
+                disabled={loading || (!text.trim() && selectedItems.size === 0)}
+                className="absolute right-2 h-10 sm:h-[48px] px-5 sm:px-6
+                  bg-gradient-to-r from-[#FF8A4C] to-[#FF6D1F] hover:from-[#FF7A3C] hover:to-[#E85D10]
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  text-white font-bold text-[14px]
+                  rounded-xl shadow-lg shadow-orange-500/30
+                  transition-all flex items-center gap-2">
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <SparkleIcon />}
+                <span className="whitespace-nowrap hidden sm:inline">{text.trim() ? 'Add Ingredient' : 'Find Recipes'}</span>
+                <span className="whitespace-nowrap sm:hidden">{text.trim() ? 'Add' : 'Find'}</span>
+              </button>
             </div>
-          </div>
-        )}
-        {inputSuccess && (
-          <div className="mt-2.5 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-xl px-4 py-2.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <p className="text-sm text-emerald-700 dark:text-emerald-400 font-medium">{inputSuccess}</p>
-          </div>
-        )}
+          </form>
+
+          {/* Error / suggestion message */}
+          {inputError && (
+            <div className="mt-4 flex items-start gap-2 bg-red-500/90 backdrop-blur-md border border-red-400/50 rounded-xl px-4 py-3 max-w-xl shadow-xl">
+              <AlertCircle className="w-4 h-4 text-white mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-white">{inputError.message}</p>
+                {inputError.suggestion && (
+                  <button onClick={applySuggestion}
+                    className="mt-1.5 text-sm font-bold text-white bg-black/20 hover:bg-black/30 px-3 py-1.5 rounded-lg transition-colors">
+                    ✓ Yes, add "{inputError.suggestion}"
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+          {inputSuccess && (
+            <div className="mt-4 flex items-center gap-2 bg-emerald-500/90 backdrop-blur-md border border-emerald-400/50 rounded-xl px-4 py-3 max-w-xl shadow-xl">
+              <CheckCircle2 className="w-4 h-4 text-white" />
+              <p className="text-sm text-white font-bold">{inputSuccess}</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Quick add ───────────────────────────────────── */}
@@ -304,13 +310,15 @@ export function IngredientInput({
             return (
               <button key={opt.id}
                 onClick={() => onDietaryChange(active ? '' : opt.id)}
-                className={`relative flex flex-col items-center justify-center gap-1.5
-                  h-[76px] rounded-2xl border-2 transition-all
+                className={`relative flex flex-col items-center justify-center gap-2
+                  h-[84px] rounded-2xl border-2 transition-all overflow-hidden
                   ${active
                     ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 shadow-sm shadow-emerald-200/50'
-                    : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-500 dark:text-stone-400 hover:border-emerald-300 hover:bg-emerald-50/30'
+                    : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 hover:border-emerald-300 hover:bg-emerald-50/30'
                   }`}>
-                <span className="text-[22px]">{opt.icon}</span>
+                <div className="w-8 h-8 rounded-full overflow-hidden drop-shadow-sm mix-blend-multiply dark:mix-blend-normal">
+                  <img src={opt.icon} alt={opt.label} className="w-full h-full object-cover" />
+                </div>
                 <span className="text-[11px] font-semibold leading-none">{opt.label}</span>
                 {active && (
                   <div className="absolute top-1.5 right-1.5 w-[18px] h-[18px] bg-emerald-500 rounded-full flex items-center justify-center">
