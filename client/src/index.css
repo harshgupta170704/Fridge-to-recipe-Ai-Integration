@@ -3,118 +3,65 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --primary: 24.6 95% 53.1%;
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --ring: 24.6 95% 53.1%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --primary: 20.5 90.2% 48.2%;
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --ring: 20.5 90.2% 48.2%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    @apply bg-stone-50 text-stone-800 dark:bg-stone-950 dark:text-stone-100 transition-colors duration-200;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600
-           text-white font-semibold py-3 px-6 rounded-2xl
-           transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed
-           disabled:active:scale-100 shadow-lg shadow-brand-500/25 hover:shadow-xl hover:shadow-brand-500/30;
-  }
-
-  .btn-secondary {
-    @apply bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 font-bold rounded-2xl border border-orange-200 dark:border-orange-800/50 hover:bg-orange-100 dark:hover:bg-orange-900/50 active:scale-95 transition-all duration-200;
-  }
-
-  .btn-ghost {
-    @apply text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl px-4 py-2 font-medium transition-colors;
-  }
-
-  .input-field {
-    @apply w-full bg-stone-50/50 dark:bg-stone-900/50 border-2 border-stone-100 dark:border-stone-800 rounded-2xl px-5 py-4 focus:outline-none focus:border-orange-400 dark:focus:border-orange-500 focus:bg-white dark:focus:bg-stone-900 transition-all text-stone-800 dark:text-stone-100 placeholder-stone-400;
-  }
-
-  .section-title {
-    @apply text-lg font-extrabold text-stone-800 dark:text-stone-100 mb-4 flex items-center gap-2;
-  }
-
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-rose-500;
-  }
-
-  .chip {
-    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors;
-  }
-
-  .ingredient-tag {
-    @apply cursor-pointer select-none active:scale-95 transition-transform;
-  }
-
-  .ingredient-category-btn {
-    @apply flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl border-2 border-transparent
-           bg-stone-50 hover:bg-amber-50
-           transition-all duration-200 cursor-pointer text-center min-w-[72px];
-  }
-
-  .ingredient-category-btn.active {
-    @apply bg-amber-50 border-amber-400
-           shadow-sm;
-  }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-stone-300 dark:bg-stone-600 rounded-full;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-stone-400 dark:bg-stone-500;
-}
-
-/* Step checkbox custom styling */
-.step-checkbox {
-  @apply w-6 h-6 rounded-lg border-2 border-stone-300 dark:border-stone-600
-         flex items-center justify-center cursor-pointer transition-all duration-200
-         hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/20;
-}
-
-.step-checkbox.checked {
-  @apply bg-emerald-500 border-emerald-500 shadow-sm shadow-emerald-500/30;
-}
-
-/* Gradient text */
-.gradient-text {
-  @apply bg-gradient-to-r from-brand-600 to-orange-500 bg-clip-text text-transparent;
-}
-
-/* Smooth category scroll on mobile */
-.category-scroll {
-  @apply flex gap-2 overflow-x-auto pb-2 -mx-1 px-1;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.category-scroll::-webkit-scrollbar {
+.hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-/* Warning shake animation */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
-}
-.shake {
-  animation: shake 0.3s ease-in-out;
-}
-
-/* Tag hover effect */
-.ingredient-tag {
-  @apply transition-all duration-200 cursor-pointer select-none;
-}
-.ingredient-tag:hover {
-  @apply scale-105;
-}
-.ingredient-tag:active {
-  @apply scale-95;
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

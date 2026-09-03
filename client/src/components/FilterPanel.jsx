@@ -1,30 +1,10 @@
 import { useState, useCallback } from 'react';
-import { X, Plus, Ban, ShoppingCart, Check, Trash2, AlertCircle } from 'lucide-react';
+import { X, Plus, Ban, Check, Trash2 } from 'lucide-react';
 
-const COMMON_EXCLUSIONS = [
-  'peanuts', 'mushrooms', 'seafood', 'pork', 'beef',
-  'egg', 'soy', 'gluten', 'tree nuts', 'shellfish',
-  'onion (प्याज)', 'garlic (लहसुन)', 'spicy food',
-];
+const COMMON_EXCLUSIONS = ['peanuts', 'mushrooms', 'seafood', 'pork', 'beef', 'egg', 'soy', 'gluten', 'spicy'];
+const DIETARY_OPTIONS = ['Vegetarian', 'Vegan', 'Gluten-free', 'Dairy-free', 'Low-carb', 'Keto', 'Jain'];
 
-const DIETARY_OPTIONS = [
-  { label: 'Vegetarian', emoji: '🥬' },
-  { label: 'Vegan', emoji: '🌱' },
-  { label: 'Gluten-free', emoji: '🌾' },
-  { label: 'Dairy-free', emoji: '🥛' },
-  { label: 'Low-carb', emoji: '🥩' },
-  { label: 'Keto', emoji: '🥑' },
-  { label: 'Jain', emoji: '🙏' },
-];
-
-export function FilterPanel({
-  selectedIngredients = [],
-  excludedItems,
-  onExcludedChange,
-  dietary,
-  onDietaryChange,
-  onRemoveIngredient,
-}) {
+export function FilterPanel({ selectedIngredients = [], excludedItems, onExcludedChange, dietary, onDietaryChange, onRemoveIngredient }) {
   const [excludeInput, setExcludeInput] = useState('');
 
   const addExclusion = useCallback((item) => {
@@ -46,169 +26,133 @@ export function FilterPanel({
   const handleExcludeKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (excludeInput.trim()) {
-        addExclusion(excludeInput.trim());
-      }
+      if (excludeInput.trim()) addExclusion(excludeInput.trim());
     }
   }, [excludeInput, addExclusion]);
 
   return (
-    <div className="space-y-4 lg:sticky lg:top-20">
-      {/* ── Available Ingredients ── */}
-      <div className="card-elevated p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="section-title mb-0">
-            <Check className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Available ({selectedIngredients.length})</span>
-          </h3>
+    <div className="space-y-6 lg:sticky lg:top-24">
+      {/* Available Ingredients */}
+      <div className="rounded-xl border bg-card text-card-foreground shadow-sm">
+        <div className="p-4 border-b flex items-center justify-between">
+          <h3 className="font-semibold tracking-tight">Available Ingredients</h3>
           {selectedIngredients.length > 0 && (
             <button
               onClick={() => selectedIngredients.forEach(i => onRemoveIngredient(i))}
-              className="text-xs text-stone-400 hover:text-red-500 transition-colors flex items-center gap-1"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Trash2 className="w-3 h-3" /> Clear
+              Clear All
             </button>
           )}
         </div>
-
-        {selectedIngredients.length === 0 ? (
-          <p className="text-xs text-stone-400 dark:text-stone-500 italic py-2">
-            No ingredients selected yet.
-            <br />Type or pick from categories →
-          </p>
-        ) : (
-          <div className="flex flex-wrap gap-1.5">
-            {selectedIngredients.map((item) => (
-              <span
-                key={item}
-                className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-50 dark:bg-emerald-950/30
-                           text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50
-                           py-1 px-2.5 rounded-full group"
-              >
-                <Check className="w-3 h-3" />
-                {item}
-                <button
-                  onClick={() => onRemoveIngredient(item)}
-                  className="opacity-0 group-hover:opacity-100 ml-0.5 hover:text-red-500 transition-all"
+        <div className="p-4">
+          {selectedIngredients.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No ingredients selected.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {selectedIngredients.map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 group"
                 >
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
+                  {item}
+                  <button onClick={() => onRemoveIngredient(item)} className="ml-1 opacity-50 hover:opacity-100">
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* ── Exclude from meal ── */}
-      <div className="card-elevated p-4 space-y-3">
-        <h3 className="section-title mb-0">
-          <Ban className="w-3.5 h-3.5 text-red-500" />
-          <span>Don't want in meal</span>
-        </h3>
-
-        {/* Exclude input */}
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={excludeInput}
-            onChange={(e) => setExcludeInput(e.target.value)}
-            onKeyDown={handleExcludeKeyDown}
-            placeholder="e.g., mushrooms, pork..."
-            className="flex-1 text-sm bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700
-                       rounded-xl px-3 py-2 placeholder-stone-400 dark:placeholder-stone-500
-                       focus:outline-none focus:border-red-400 transition-colors"
-          />
-          <button
-            type="button"
-            onClick={() => excludeInput.trim() && addExclusion(excludeInput.trim())}
-            disabled={!excludeInput.trim()}
-            className="text-sm bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400
-                       px-3 py-2 rounded-xl border border-red-200 dark:border-red-800/50
-                       hover:bg-red-100 dark:hover:bg-red-950/50 disabled:opacity-30
-                       transition-all flex items-center gap-1"
-          >
-            <Plus className="w-3.5 h-3.5" />
-          </button>
+      {/* Exclusions */}
+      <div className="rounded-xl border bg-card text-card-foreground shadow-sm">
+        <div className="p-4 border-b">
+          <h3 className="font-semibold tracking-tight">Exclude from Meal</h3>
         </div>
+        <div className="p-4 space-y-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={excludeInput}
+              onChange={(e) => setExcludeInput(e.target.value)}
+              onKeyDown={handleExcludeKeyDown}
+              placeholder="e.g., mushrooms..."
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            />
+            <button
+              type="button"
+              onClick={() => excludeInput.trim() && addExclusion(excludeInput.trim())}
+              disabled={!excludeInput.trim()}
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
 
-        {/* Common exclusions */}
-        <div className="flex flex-wrap gap-1.5">
-          {COMMON_EXCLUSIONS.map((item) => {
-            const clean = item.split('(')[0].trim();
-            const isExcluded = excludedItems.has(clean);
-            return (
+          <div className="flex flex-wrap gap-2">
+            {COMMON_EXCLUSIONS.map((item) => {
+              const isExcluded = excludedItems.has(item);
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => isExcluded ? removeExclusion(item) : addExclusion(item)}
+                  className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                    isExcluded
+                      ? 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80'
+                      : 'border-input bg-background hover:bg-accent hover:text-accent-foreground text-muted-foreground'
+                  }`}
+                >
+                  {isExcluded ? 'Excluded' : item}
+                </button>
+              );
+            })}
+          </div>
+
+          {excludedItems.size > 0 && (
+            <div className="pt-2">
+              <div className="flex flex-wrap gap-2">
+                {[...excludedItems].map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                  >
+                    {item}
+                    <button onClick={() => removeExclusion(item)} className="ml-1 opacity-70 hover:opacity-100">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Dietary */}
+      <div className="rounded-xl border bg-card text-card-foreground shadow-sm">
+        <div className="p-4 border-b">
+          <h3 className="font-semibold tracking-tight">Dietary Preference</h3>
+        </div>
+        <div className="p-4">
+          <div className="flex flex-wrap gap-2">
+            {DIETARY_OPTIONS.map((opt) => (
               <button
-                key={item}
+                key={opt}
                 type="button"
-                onClick={() => isExcluded ? removeExclusion(clean) : addExclusion(item)}
-                className={`text-[11px] py-1 px-2.5 rounded-full border transition-all duration-200 font-medium ${
-                  isExcluded
-                    ? 'bg-red-500 text-white border-red-500 shadow-sm'
-                    : 'bg-white dark:bg-stone-800 text-stone-500 dark:text-stone-400 border-stone-200 dark:border-stone-700 hover:border-red-300 hover:text-red-500'
+                onClick={() => onDietaryChange(dietary === opt ? '' : opt)}
+                className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                  dietary === opt
+                    ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
+                    : 'border-input bg-background hover:bg-accent hover:text-accent-foreground text-muted-foreground'
                 }`}
               >
-                {isExcluded ? '🚫 ' : ''}{clean}
+                {opt}
               </button>
-            );
-          })}
-        </div>
-
-        {/* Active exclusions */}
-        {excludedItems.size > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-1 border-t border-stone-100 dark:border-stone-800">
-            {[...excludedItems].map((item) => (
-              <span
-                key={item}
-                className="inline-flex items-center gap-1 text-xs font-medium bg-red-50 dark:bg-red-950/30
-                           text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50
-                           py-1 px-2.5 rounded-full"
-              >
-                🚫 {item}
-                <button
-                  onClick={() => removeExclusion(item)}
-                  className="hover:text-red-800 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
             ))}
           </div>
-        )}
-      </div>
-
-      {/* ── Dietary Preferences ── */}
-      <div className="card-elevated p-4 space-y-3">
-        <h3 className="section-title mb-0">
-          🍽️ Dietary preference
-        </h3>
-        <div className="flex flex-wrap gap-1.5">
-          {DIETARY_OPTIONS.map((opt) => (
-            <button
-              key={opt.label}
-              type="button"
-              onClick={() => onDietaryChange(dietary === opt.label ? '' : opt.label)}
-              className={`text-xs py-1.5 px-3 rounded-full border-2 font-semibold transition-all duration-200 ${
-                dietary === opt.label
-                  ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-500/25'
-                  : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-600 hover:border-emerald-400'
-              }`}
-            >
-              {opt.emoji} {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Legend ── */}
-      <div className="text-[11px] text-stone-400 dark:text-stone-500 space-y-1 px-1">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500" /> Available ingredients
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-red-500" /> Excluded from recipe
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-brand-500" /> Dietary filter active
         </div>
       </div>
     </div>

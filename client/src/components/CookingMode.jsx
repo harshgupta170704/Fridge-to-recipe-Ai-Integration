@@ -58,7 +58,7 @@ export function CookingMode({ steps, timer, onStartTimer, onClose }) {
         </span>
         <button
           onClick={onClose}
-          className="btn-ghost"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground px-4 py-2"
           aria-label="Exit cooking mode"
         >
           <X className="w-5 h-5" />
@@ -95,13 +95,13 @@ export function CookingMode({ steps, timer, onStartTimer, onClose }) {
                 <div className="flex gap-3 justify-center">
                   <button
                     onClick={timer.togglePause}
-                    className="btn-secondary text-sm"
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 text-sm"
                   >
                     {timer.isRunning ? 'Pause' : 'Resume'}
                   </button>
                   <button
                     onClick={timer.stopTimer}
-                    className="btn-ghost text-sm"
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground px-4 py-2 text-sm"
                   >
                     Stop
                   </button>
@@ -113,7 +113,7 @@ export function CookingMode({ steps, timer, onStartTimer, onClose }) {
             ) : (
               <button
                 onClick={() => onStartTimer(step.stepNumber, step.durationMinutes)}
-                className="inline-flex items-center gap-2 btn-secondary text-lg py-3 px-6"
+                className="inline-flex items-center gap-2 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 text-lg py-3 px-6"
               >
                 <Clock className="w-5 h-5" />
                 Start Timer ({step.durationMinutes} min)
@@ -149,7 +149,7 @@ export function CookingMode({ steps, timer, onStartTimer, onClose }) {
         <button
           onClick={goPrev}
           disabled={isFirst}
-          className="btn-secondary flex items-center gap-2 disabled:opacity-30"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 flex items-center gap-2 disabled:opacity-30"
         >
           <ChevronLeft className="w-5 h-5" />
           Previous
@@ -173,7 +173,7 @@ export function CookingMode({ steps, timer, onStartTimer, onClose }) {
         <button
           onClick={goNext}
           disabled={isLast}
-          className="btn-secondary flex items-center gap-2 disabled:opacity-30"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground px-4 py-2 flex items-center gap-2 disabled:opacity-30"
         >
           Next
           <ChevronRight className="w-5 h-5" />

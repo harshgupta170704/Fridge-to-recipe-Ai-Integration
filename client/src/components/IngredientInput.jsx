@@ -1,76 +1,18 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
-import { X, Sparkles, Loader2, Search, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Sparkles, Loader2, ArrowRight } from 'lucide-react';
 
-// ── Ingredient categories with emoji icons & common items (English + Hindi) ──
 const INGREDIENT_CATEGORIES = [
-  {
-    id: 'protein', label: 'Proteins', emoji: '🥩',
-    items: [
-      'chicken', 'paneer (पनीर)', 'eggs (अंडे)', 'tofu', 'fish (मछली)',
-      'mutton', 'prawns (झींगा)', 'dal (दाल)', 'chickpeas (छोले)',
-      'soya chunks', 'cottage cheese',
-    ],
-  },
-  {
-    id: 'vegetables', label: 'Veggies', emoji: '🥬',
-    items: [
-      'onion (प्याज)', 'tomato (टमाटर)', 'potato (आलू)', 'capsicum (शिमला मिर्च)',
-      'spinach (पालक)', 'cauliflower (गोभी)', 'peas (मटर)', 'carrot (गाजर)',
-      'brinjal (बैंगन)', 'mushroom', 'cabbage (पत्तागोभी)', 'beans',
-      'corn (मक्का)', 'cucumber (खीरा)', 'bottle gourd (लौकी)',
-    ],
-  },
-  {
-    id: 'dairy', label: 'Dairy', emoji: '🧀',
-    items: [
-      'milk (दूध)', 'butter (मक्खन)', 'cream (क्रीम)', 'cheese',
-      'curd / yogurt (दही)', 'ghee (घी)', 'condensed milk',
-    ],
-  },
-  {
-    id: 'grains', label: 'Grains', emoji: '🌾',
-    items: [
-      'rice (चावल)', 'atta / wheat flour (आटा)', 'bread', 'pasta',
-      'oats', 'maida (मैदा)', 'noodles', 'semolina (सूजी)',
-      'poha (पोहा)', 'besan (बेसन)',
-    ],
-  },
-  {
-    id: 'spices', label: 'Spices', emoji: '🫙',
-    items: [
-      'salt & pepper', 'turmeric (हल्दी)', 'cumin (जीरा)',
-      'red chili powder (लाल मिर्च)', 'garam masala', 'coriander (धनिया)',
-      'mustard seeds (राई)', 'bay leaf (तेज पत्ता)',
-    ],
-  },
-  {
-    id: 'sauces', label: 'Oils & Sauces', emoji: '🫗',
-    items: [
-      'olive oil', 'mustard oil (सरसों का तेल)', 'soy sauce',
-      'vinegar (सिरका)', 'tomato ketchup', 'coconut oil',
-    ],
-  },
-  {
-    id: 'fruits', label: 'Fruits', emoji: '🍎',
-    items: [
-      'lemon (नींबू)', 'banana (केला)', 'apple (सेब)', 'mango (आम)',
-      'coconut (नारियल)', 'tamarind (इमली)',
-    ],
-  },
+  { id: 'protein', label: 'Proteins', items: ['chicken', 'paneer (पनीर)', 'eggs', 'tofu', 'fish', 'dal', 'chickpeas'] },
+  { id: 'vegetables', label: 'Veggies', items: ['onion', 'tomato', 'potato', 'spinach', 'peas', 'carrot', 'mushroom'] },
+  { id: 'dairy', label: 'Dairy', items: ['milk', 'butter', 'cheese', 'curd / yogurt', 'cream'] },
+  { id: 'grains', label: 'Grains', items: ['rice', 'wheat flour (आटा)', 'bread', 'pasta', 'oats'] },
 ];
-
-const MAX_CHARS = 500;
 
 function validateInput(text) {
   if (!text.trim()) return { valid: true, message: '' };
-  if (/https?:\/\/|www\./i.test(text))
-    return { valid: false, message: '🚫 Please enter ingredient names, not URLs' };
-  if (/[{}();=<>]/.test(text))
-    return { valid: false, message: '🚫 Please enter ingredient names, no special characters' };
-  if (/\b\w{25,}\b/.test(text))
-    return { valid: false, message: '🤔 That doesn\'t look like an ingredient. Try "chicken, rice, tomato"' };
-  if (/^\d+$/.test(text.trim()))
-    return { valid: false, message: '🚫 Please enter ingredient names, not just numbers' };
+  if (/https?:\/\/|www\./i.test(text)) return { valid: false, message: 'Please enter ingredient names, not URLs' };
+  if (/[{}();=<>]/.test(text)) return { valid: false, message: 'Please remove special characters' };
+  if (/\b\w{25,}\b/.test(text)) return { valid: false, message: 'Does not look like an ingredient' };
   return { valid: true, message: '' };
 }
 
@@ -85,27 +27,16 @@ export function IngredientInput({ onGenerate, loading, selectedItems, onToggleIt
   const textareaRef = useRef(null);
 
   const typedIngredients = parseIngredients(text);
-
   const allIngredients = useMemo(() => {
     return [...new Set([...typedIngredients, ...selectedItems])];
   }, [typedIngredients, selectedItems]);
 
   const handleTextChange = useCallback((e) => {
-    const newText = e.target.value.slice(0, MAX_CHARS);
+    const newText = e.target.value.slice(0, 500);
     setText(newText);
     const validation = validateInput(newText);
     setValidationError(validation.valid ? '' : validation.message);
   }, []);
-
-  const toggleItem = useCallback((item) => {
-    const cleanName = item.split('(')[0].trim().split('/')[0].trim();
-    onToggleItem(cleanName);
-  }, [onToggleItem]);
-
-  const isItemSelected = useCallback((item) => {
-    const cleanName = item.split('(')[0].trim().split('/')[0].trim();
-    return selectedItems.has(cleanName);
-  }, [selectedItems]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
@@ -120,117 +51,79 @@ export function IngredientInput({ onGenerate, loading, selectedItems, onToggleIt
   const activeCategoryData = INGREDIENT_CATEGORIES.find(c => c.id === activeCategory);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* ── Hero ── */}
-      <div className="text-center pt-2 pb-3">
-        <div className="text-5xl mb-2">🍳</div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-stone-800 dark:text-stone-100 mb-1.5">
-          What's in your <span className="gradient-text">fridge</span>?
-        </h2>
-        <p className="text-stone-500 dark:text-stone-400 text-sm max-w-md mx-auto">
-          Type ingredients or pick from categories.{' '}
-          <span className="text-brand-600 dark:text-brand-400 font-medium">हिंदी में भी लिख सकते हैं! 🇮🇳</span>
-        </p>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+      <div>
+        <h2 className="text-3xl font-semibold tracking-tight mb-2">What's in your fridge?</h2>
+        <p className="text-muted-foreground">Type your ingredients or select from the common items below.</p>
       </div>
 
-      {/* ── Text input ── */}
-      <div className="card-elevated p-4 sm:p-5 space-y-3">
-        <label htmlFor="ingredients" className="section-title">
-          <Search className="w-3.5 h-3.5" /> Type your ingredients
-        </label>
-        <textarea
-          ref={textareaRef}
-          id="ingredients"
-          value={text}
-          onChange={handleTextChange}
-          onKeyDown={handleKeyDown}
-          placeholder={"e.g., chicken, garlic, pasta, tomatoes\nया हिंदी में: आलू, प्याज, टमाटर, पनीर..."}
-          className={`input-field min-h-[80px] resize-none text-[15px] leading-relaxed ${
-            validationError ? 'border-red-400 dark:border-red-500 shake' : ''
-          }`}
-          rows={2}
-          disabled={loading}
-          aria-label="List your ingredients in English or Hindi"
-        />
-        <div className="flex justify-between items-center">
-          {validationError ? (
-            <span className="text-xs text-red-500 flex items-center gap-1">
-              <AlertCircle className="w-3 h-3" />{validationError}
-            </span>
-          ) : (
-            <span className="text-xs text-stone-400">Separate with commas · English or हिंदी</span>
-          )}
-          <span className={`text-xs font-mono ${text.length > MAX_CHARS * 0.9 ? 'text-red-500' : 'text-stone-400'}`}>
-            {text.length}/{MAX_CHARS}
-          </span>
+      <div className="flex flex-col gap-2">
+        <div className="relative">
+          <textarea
+            ref={textareaRef}
+            id="ingredients"
+            value={text}
+            onChange={handleTextChange}
+            onKeyDown={handleKeyDown}
+            placeholder="e.g., chicken, garlic, pasta..."
+            className="flex w-full rounded-md border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[120px] resize-none"
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            disabled={allIngredients.length === 0 || loading || !!validationError}
+            className="absolute bottom-3 right-3 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4"
+          >
+            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+            Generate
+          </button>
         </div>
+        {validationError && (
+          <p className="text-sm font-medium text-destructive">{validationError}</p>
+        )}
       </div>
 
-      {/* ── Category browser ── */}
-      <div className="card-elevated p-4 sm:p-5 space-y-3">
-        <span className="section-title">🛒 Browse & pick ingredients</span>
-
-        {/* Category tabs - horizontal scroll */}
-        <div className="category-scroll">
+      <div className="rounded-xl border bg-card text-card-foreground shadow-sm">
+        <div className="flex p-1 border-b overflow-x-auto hide-scrollbar">
           {INGREDIENT_CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               type="button"
-              onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
-              className={`ingredient-category-btn flex-shrink-0 ${activeCategory === cat.id ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
+                activeCategory === cat.id ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              }`}
             >
-              <span className="text-xl">{cat.emoji}</span>
-              <span className="text-[10px] font-bold text-stone-600 dark:text-stone-300 leading-tight">{cat.label}</span>
+              {cat.label}
             </button>
           ))}
         </div>
-
-        {/* Items grid */}
-        {activeCategoryData && (
-          <div className="flex flex-wrap gap-1.5 animate-fade-in">
-            {activeCategoryData.items.map((item) => {
-              const selected = isItemSelected(item);
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => toggleItem(item)}
-                  className={`ingredient-tag text-xs py-1.5 px-3 rounded-full border-2 font-medium transition-all duration-200 ${
-                    selected
-                      ? 'bg-brand-500 text-white border-brand-500 shadow-sm shadow-brand-500/25'
-                      : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-600 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/20'
-                  }`}
-                >
-                  {selected ? '✓ ' : '+ '}{item}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {!activeCategory && (
-          <p className="text-center text-xs text-stone-400 py-2">👆 Tap a category to browse</p>
-        )}
+        
+        <div className="p-4">
+          {activeCategoryData && (
+            <div className="flex flex-wrap gap-2">
+              {activeCategoryData.items.map((item) => {
+                const cleanName = item.split('(')[0].trim().split('/')[0].trim();
+                const isSelected = selectedItems.has(cleanName);
+                return (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => onToggleItem(cleanName)}
+                    className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                      isSelected 
+                        ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80' 
+                        : 'border-input bg-background hover:bg-accent hover:text-accent-foreground'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* ── Submit ── */}
-      <button
-        type="submit"
-        disabled={allIngredients.length === 0 || loading || !!validationError}
-        className="btn-primary w-full flex items-center justify-center gap-2.5 py-4 text-base"
-      >
-        {loading ? (
-          <><Loader2 className="w-5 h-5 animate-spin" /> Cooking up a recipe...</>
-        ) : (
-          <>
-            <Sparkles className="w-5 h-5" />
-            Generate Recipe
-            {allIngredients.length > 0 && (
-              <span className="bg-white/20 text-sm px-2 py-0.5 rounded-full">{allIngredients.length}</span>
-            )}
-          </>
-        )}
-      </button>
     </form>
   );
 }

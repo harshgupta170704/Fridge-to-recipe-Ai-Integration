@@ -58,7 +58,7 @@ export function RefinementBar({ onRefine, refining }) {
         <button
           type="submit"
           disabled={!instruction.trim() || refining}
-          className="btn-primary flex items-center gap-2 whitespace-nowrap"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 px-4 py-2 flex items-center gap-2 whitespace-nowrap"
         >
           {refining ? (
             <Loader2 className="w-4 h-4 animate-spin" />

@@ -23,7 +23,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
 
   return (
     <>
-      <div className="card-elevated animate-slide-up overflow-hidden">
+      <div className="rounded-xl border bg-card text-card-foreground shadow animate-slide-up overflow-hidden">
         {/* Warning banner for Zod errors */}
         {warnings && warnings.length > 0 && (
           <div className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200/60 dark:border-amber-800/60 px-5 py-3 flex items-start gap-2.5">
@@ -54,7 +54,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
               </div>
               <button
                 onClick={onClear}
-                className="btn-ghost flex-shrink-0 p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground px-4 py-2 flex-shrink-0 p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
                 title="Start over"
                 aria-label="Start over"
               >
@@ -95,7 +95,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
             {/* Ingredients Side */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="section-title flex items-center gap-2 mb-0">
+                <h3 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2 flex items-center gap-2 mb-0">
                   <Utensils className="w-5 h-5 text-brand-500" />
                   Ingredients
                 </h3>
@@ -130,7 +130,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
 
           {/* Steps */}
           <div className="pt-4 border-t border-stone-100 dark:border-stone-800">
-            <h3 className="section-title flex items-center gap-2">
+            <h3 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2 flex items-center gap-2">
               <ChefHat className="w-5 h-5 text-orange-500" />
               Instructions
             </h3>
@@ -156,7 +156,7 @@ export function RecipeCard({ recipe, warnings, onRefine, refining, onClear }) {
 
           {/* Refinement */}
           <div className="pt-6 border-t border-stone-100 dark:border-stone-800">
-            <h3 className="section-title text-center text-stone-500 dark:text-stone-400">
+            <h3 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2 text-center text-stone-500 dark:text-stone-400">
               Not quite right? Ask AI to tweak it
             </h3>
             <div className="max-w-xl mx-auto">
