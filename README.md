@@ -1,21 +1,31 @@
-# 🍳 Fridge to Recipe
+# 🍳 FridgeChef
+> Turn your fridge into a feast with AI-powered recipe generation!
 
-A React app that turns your fridge ingredients into a complete, interactive recipe using AI. Not a chatbot — the AI returns structured JSON that powers interactive UI components.
+A React app that turns your fridge ingredients into a complete, interactive recipe using AI. Not a chatbot — the AI returns structured JSON that powers beautiful, interactive UI components.
 
 ![React](https://img.shields.io/badge/React-18-blue) ![Vite](https://img.shields.io/badge/Vite-6-purple) ![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan) ![Groq](https://img.shields.io/badge/Groq-GPT_OSS_120B-orange)
 
-## ✨ Features
+## 📸 Screenshots
 
-- **Smart ingredient input** — free-form text with auto-parsed chips, pantry quick-adds, and dietary preference toggles
-- **AI-powered recipe generation** — GPT OSS 120B on Groq (OpenAI-compatible API) with JSON mode (`response_format`) + explicit schema in system prompt for reliable structured output
-- **Serving scaler** — adjust servings with proportional ingredient scaling, smart fraction display (½, ⅓, ¼), and unit conversion at thresholds
-- **Ingredient swaps** — each ingredient shows AI-suggested alternatives with reasons
-- **Step checklist** — check off steps with progress bar
-- **Built-in cooking timers** — click any step's duration to start a countdown timer
-- **Cooking Mode** — distraction-free, one-step-at-a-time view for actual cooking
-- **Refinement loop** — modify the existing recipe ("make it spicier", "no dairy") without regenerating from scratch
-- **Dark mode** — full dark theme support
-- **Mobile responsive** — works on all screen sizes
+### Front Page - Smart Ingredient Selection
+![Front Page UI](./assets/front-page.png)
+
+### Recipe Results - Dynamic AI Imagery
+![Recipe Page UI](./assets/recipe-page.png)
+
+## ✨ Premium Features
+
+- **Semantic Ingredient Validation** — fuzzy matching (Levenshtein distance) catches typos (e.g., "chiken" -> "chicken") and blocks non-food items.
+- **Dynamic AI Photography** — uses Pollinations AI to instantly generate gorgeous, realistic food photography for your generated recipes and cooking steps.
+- **Dietary conflict resolution** — Seamlessly filter recipes based on dietary needs (Vegan, Keto, Gluten-free, etc.) with automatic conflict resolution.
+- **Smart ingredient input** — free-form text with auto-parsed chips, pantry quick-adds, and beautiful 3D dietary preference toggles.
+- **AI-powered recipe generation** — GPT OSS 120B on Groq (OpenAI-compatible API) with JSON mode (`response_format`) + explicit schema in system prompt for reliable structured output.
+- **Serving scaler** — adjust servings with proportional ingredient scaling, smart fraction display (½, ⅓, ¼), and unit conversion at thresholds.
+- **Ingredient swaps** — each ingredient shows AI-suggested alternatives with reasons.
+- **Step checklist & timers** — check off steps with progress bar, and click any step's duration to start a countdown timer.
+- **Cooking Mode** — distraction-free, one-step-at-a-time view for actual cooking.
+- **Refinement loop** — modify the existing recipe ("make it spicier", "no dairy") without regenerating from scratch.
+- **Mobile responsive & Dark Mode** — works beautifully on all screen sizes with full dark theme support.
 - **Robust error handling** — handles malformed JSON, wrong shape, empty responses, timeouts, rate limits, and stale responses
 
 ## 🛡️ Error Handling (The Headline Feature)
