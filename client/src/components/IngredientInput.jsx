@@ -1,25 +1,23 @@
 import { useState, useRef } from 'react';
-import { Search, Loader2, X, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Loader2, X, Trash2, ChevronDown, ChevronUp, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { validateIngredients } from '../utils/ingredientValidator';
 
-/* ── Emoji map for common ingredients ───────────────────────── */
+/* ── Emoji map ──────────────────────────────────────────── */
 const EMOJI_MAP = {
-  chicken: '🍗', eggs: '🥚', tomato: '🍅', potato: '🥔', onion: '🧅',
-  rice: '🍚', paneer: '🧀', fish: '🐟', dal: '🫘', tofu: '🫛',
-  chickpeas: '🫘', spinach: '🥬', peas: '🟢', carrot: '🥕',
-  mushroom: '🍄', milk: '🥛', butter: '🧈', cheese: '🧀',
-  curd: '🥛', cream: '🍦', bread: '🍞', pasta: '🍝', oats: '🥣',
-  garlic: '🧄', ginger: '🫚', chili: '🌶️', wheat: '🌾',
+  chicken:'🍗', eggs:'🥚', egg:'🥚', tomato:'🍅', potato:'🥔', onion:'🧅',
+  rice:'🍚', paneer:'🧀', fish:'🐟', dal:'🫘', tofu:'🫛',
+  chickpeas:'🫘', spinach:'🥬', peas:'🟢', carrot:'🥕',
+  mushroom:'🍄', milk:'🥛', butter:'🧈', cheese:'🧀',
+  curd:'🥛', cream:'🍦', bread:'🍞', pasta:'🍝', oats:'🥣',
+  garlic:'🧄', ginger:'🫚', chili:'🌶️', wheat:'🌾',
 };
-
 const getEmoji = (name) => {
-  const lower = name.toLowerCase();
-  for (const [key, emoji] of Object.entries(EMOJI_MAP)) {
-    if (lower.includes(key)) return emoji;
-  }
+  const l = name.toLowerCase();
+  for (const [k, e] of Object.entries(EMOJI_MAP)) { if (l.includes(k)) return e; }
   return '🥘';
 };
 
-/* ── Quick-add ingredients ──────────────────────────────────── */
+/* ── Data ────────────────────────────────────────────────── */
 const QUICK_ADD = [
   { id: 'chicken', label: 'Chicken', emoji: '🍗' },
   { id: 'eggs',    label: 'Eggs',    emoji: '🥚' },
@@ -29,59 +27,44 @@ const QUICK_ADD = [
   { id: 'rice',    label: 'Rice',    emoji: '🍚' },
 ];
 
-/* ── All categories (shown when "More" is expanded) ─────────── */
 const ALL_CATEGORIES = [
-  { label: 'Proteins 🥩',  items: [
-    { id: 'chicken', label: 'Chicken', emoji: '🍗' },
-    { id: 'paneer',  label: 'Paneer',  emoji: '🧀' },
-    { id: 'eggs',    label: 'Eggs',    emoji: '🥚' },
-    { id: 'tofu',    label: 'Tofu',    emoji: '🫛' },
-    { id: 'fish',    label: 'Fish',    emoji: '🐟' },
-    { id: 'dal',     label: 'Dal',     emoji: '🫘' },
-    { id: 'chickpeas', label: 'Chickpeas', emoji: '🫘' },
+  { label: 'Proteins 🥩', items: [
+    { id:'chicken',label:'Chicken',emoji:'🍗' },{ id:'paneer',label:'Paneer',emoji:'🧀' },
+    { id:'eggs',label:'Eggs',emoji:'🥚' },{ id:'tofu',label:'Tofu',emoji:'🫛' },
+    { id:'fish',label:'Fish',emoji:'🐟' },{ id:'dal',label:'Dal',emoji:'🫘' },
+    { id:'chickpeas',label:'Chickpeas',emoji:'🫘' },
   ]},
-  { label: 'Veggies 🥬',  items: [
-    { id: 'onion',    label: 'Onion',    emoji: '🧅' },
-    { id: 'tomato',   label: 'Tomato',   emoji: '🍅' },
-    { id: 'potato',   label: 'Potato',   emoji: '🥔' },
-    { id: 'spinach',  label: 'Spinach',  emoji: '🥬' },
-    { id: 'peas',     label: 'Peas',     emoji: '🟢' },
-    { id: 'carrot',   label: 'Carrot',   emoji: '🥕' },
-    { id: 'mushroom', label: 'Mushroom', emoji: '🍄' },
+  { label: 'Veggies 🥬', items: [
+    { id:'onion',label:'Onion',emoji:'🧅' },{ id:'tomato',label:'Tomato',emoji:'🍅' },
+    { id:'potato',label:'Potato',emoji:'🥔' },{ id:'spinach',label:'Spinach',emoji:'🥬' },
+    { id:'peas',label:'Peas',emoji:'🟢' },{ id:'carrot',label:'Carrot',emoji:'🥕' },
+    { id:'mushroom',label:'Mushroom',emoji:'🍄' },
   ]},
-  { label: 'Dairy 🧀',    items: [
-    { id: 'milk',   label: 'Milk',   emoji: '🥛' },
-    { id: 'butter', label: 'Butter', emoji: '🧈' },
-    { id: 'cheese', label: 'Cheese', emoji: '🧀' },
-    { id: 'curd',   label: 'Curd',   emoji: '🥛' },
-    { id: 'cream',  label: 'Cream',  emoji: '🍦' },
+  { label: 'Dairy 🧀', items: [
+    { id:'milk',label:'Milk',emoji:'🥛' },{ id:'butter',label:'Butter',emoji:'🧈' },
+    { id:'cheese',label:'Cheese',emoji:'🧀' },{ id:'curd',label:'Curd',emoji:'🥛' },
+    { id:'cream',label:'Cream',emoji:'🍦' },
   ]},
-  { label: 'Grains 🌾',   items: [
-    { id: 'rice',  label: 'Rice',  emoji: '🍚' },
-    { id: 'bread', label: 'Bread', emoji: '🍞' },
-    { id: 'pasta', label: 'Pasta', emoji: '🍝' },
-    { id: 'oats',  label: 'Oats',  emoji: '🥣' },
+  { label: 'Grains 🌾', items: [
+    { id:'rice',label:'Rice',emoji:'🍚' },{ id:'bread',label:'Bread',emoji:'🍞' },
+    { id:'pasta',label:'Pasta',emoji:'🍝' },{ id:'oats',label:'Oats',emoji:'🥣' },
   ]},
-  { label: 'Spices 🫙',   items: [
-    { id: 'garlic',  label: 'Garlic',  emoji: '🧄' },
-    { id: 'ginger',  label: 'Ginger',  emoji: '🫚' },
-    { id: 'chili',   label: 'Chili',   emoji: '🌶️' },
-    { id: 'turmeric', label: 'Turmeric', emoji: '🟡' },
-    { id: 'cumin',   label: 'Cumin',   emoji: '🫙' },
+  { label: 'Spices 🫙', items: [
+    { id:'garlic',label:'Garlic',emoji:'🧄' },{ id:'ginger',label:'Ginger',emoji:'🫚' },
+    { id:'chili',label:'Chili',emoji:'🌶️' },{ id:'turmeric',label:'Turmeric',emoji:'🟡' },
+    { id:'cumin',label:'Cumin',emoji:'🫙' },
   ]},
 ];
 
-/* ── Dietary options with tall icon cards ────────────────────── */
 const DIETARY_OPTIONS = [
-  { id: 'Vegetarian',  label: 'Vegetarian',  emoji: '🌿', icon: '🥬' },
-  { id: 'Vegan',       label: 'Vegan',       emoji: '🌱', icon: '🌱' },
-  { id: 'Gluten-free', label: 'Gluten-free', emoji: '🌾', icon: '🌾' },
-  { id: 'Dairy-free',  label: 'Dairy-free',  emoji: '🥛', icon: '🥛' },
-  { id: 'Low-carb',    label: 'Low-carb',    emoji: '🥑', icon: '🥑' },
-  { id: 'Keto',        label: 'Keto',        emoji: '🥩', icon: '🥩' },
-  { id: 'Jain',        label: 'Jain',        emoji: '🙏', icon: '🙏' },
+  { id:'Vegetarian',label:'Vegetarian',icon:'🌿' },
+  { id:'Vegan',label:'Vegan',icon:'🌱' },
+  { id:'Gluten-free',label:'Gluten-free',icon:'🌾' },
+  { id:'Dairy-free',label:'Dairy-free',icon:'🥛' },
+  { id:'Low-carb',label:'Low-carb',icon:'🥑' },
+  { id:'Keto',label:'Keto',icon:'🥩' },
+  { id:'Jain',label:'Jain',icon:'🙏' },
 ];
-
 
 export function IngredientInput({
   onGenerate, loading, selectedItems, onToggleItem,
@@ -89,17 +72,55 @@ export function IngredientInput({
 }) {
   const [text, setText] = useState('');
   const [showMore, setShowMore] = useState(false);
+  const [inputError, setInputError] = useState(null);    // { message, suggestion }
+  const [inputSuccess, setInputSuccess] = useState(null); // string
   const inputRef = useRef(null);
+
+  const clearMessages = () => { setInputError(null); setInputSuccess(null); };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    clearMessages();
+
     if (text.trim()) {
-      text.split(',').map(s => s.trim()).filter(Boolean).forEach(item => {
-        if (!selectedItems.has(item.toLowerCase())) onToggleItem(item.toLowerCase());
+      const { validItems, errors } = validateIngredients(text);
+
+      // Add valid items
+      validItems.forEach(item => {
+        if (!selectedItems.has(item)) onToggleItem(item);
       });
-      setText('');
+
+      if (errors.length > 0) {
+        const err = errors[0]; // Show first error
+        if (err.suggestion) {
+          setInputError({
+            message: `"${err.input}" is not a recognized ingredient.`,
+            suggestion: err.suggestion,
+          });
+        } else {
+          setInputError({ message: err.message, suggestion: null });
+        }
+        // Keep the invalid text so the user can fix it
+        setText(errors.map(e => e.input).join(', '));
+      } else {
+        setText('');
+        if (validItems.length > 0) {
+          setInputSuccess(`Added ${validItems.join(', ')}!`);
+          setTimeout(() => setInputSuccess(null), 2500);
+        }
+      }
     } else if (selectedItems.size > 0) {
       onGenerate();
+    }
+  };
+
+  const applySuggestion = () => {
+    if (inputError?.suggestion) {
+      onToggleItem(inputError.suggestion);
+      setText('');
+      setInputSuccess(`Added "${inputError.suggestion}"!`);
+      setInputError(null);
+      setTimeout(() => setInputSuccess(null), 2500);
     }
   };
 
@@ -110,8 +131,8 @@ export function IngredientInput({
   const selectedArray = [...selectedItems];
 
   return (
-    <div className="space-y-8">
-      {/* ── Hero heading ─────────────────────────────────────── */}
+    <div className="space-y-7">
+      {/* ── Hero ────────────────────────────────────────── */}
       <div>
         <h1 className="text-[28px] sm:text-[36px] font-bold text-stone-900 dark:text-white tracking-tight leading-tight">
           What's in your fridge? <span className="inline-block">🥕</span>
@@ -121,48 +142,69 @@ export function IngredientInput({
         </p>
       </div>
 
-      {/* ── Search bar with embedded CTA ─────────────────────── */}
-      <form onSubmit={handleSubmit}>
-        <div className="relative flex items-center">
-          <Search className="absolute left-4 sm:left-5 w-5 h-5 text-stone-400 pointer-events-none" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type ingredients e.g., chicken, tomato, onion..."
-            disabled={loading}
-            className="w-full h-14 sm:h-16 pl-12 sm:pl-14 pr-40 sm:pr-48 rounded-2xl
-              border-2 border-stone-200 dark:border-stone-700
-              bg-white dark:bg-stone-900
-              focus:border-[#FF8A4C] focus:ring-4 focus:ring-[#FF8A4C]/10
-              outline-none text-[15px] text-stone-800 dark:text-stone-100
-              placeholder:text-stone-400 transition-all"
-          />
-          <button
-            type="button"
-            onClick={text.trim() ? handleSubmit : onGenerate}
-            disabled={loading || (!text.trim() && selectedItems.size === 0)}
-            className="absolute right-2.5 h-10 sm:h-11 px-5 sm:px-7
-              bg-[#FF8A4C] hover:bg-[#E86F32] active:bg-[#C74A00]
-              disabled:opacity-40 disabled:cursor-not-allowed
-              text-white font-semibold text-[14px] sm:text-[15px]
-              rounded-xl shadow-md shadow-orange-300/30 dark:shadow-orange-900/30
-              transition-all flex items-center gap-2"
-          >
-            {loading
-              ? <Loader2 className="w-4 h-4 animate-spin" />
-              : <SparkleIcon />
-            }
-            <span className="whitespace-nowrap">{text.trim() ? 'Add' : 'Find Recipes'}</span>
-          </button>
-        </div>
-      </form>
-
-      {/* ── Quick add row ────────────────────────────────────── */}
+      {/* ── Search bar ──────────────────────────────────── */}
       <div>
-        <h3 className="text-[13px] font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-3">
+        <form onSubmit={handleSubmit}>
+          <div className="relative flex items-center">
+            <Search className="absolute left-4 sm:left-5 w-5 h-5 text-stone-400 pointer-events-none" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={text}
+              onChange={(e) => { setText(e.target.value); clearMessages(); }}
+              onKeyDown={handleKeyDown}
+              placeholder="Type ingredients e.g., chicken, tomato, onion..."
+              disabled={loading}
+              className={`w-full h-14 sm:h-[60px] pl-12 sm:pl-14 pr-40 sm:pr-48 rounded-2xl
+                border-2 bg-white dark:bg-stone-900
+                outline-none text-[15px] text-stone-800 dark:text-stone-100
+                placeholder:text-stone-400 transition-all
+                ${inputError
+                  ? 'border-red-300 focus:border-red-400 focus:ring-4 focus:ring-red-100'
+                  : 'border-stone-200 dark:border-stone-700 focus:border-[#FF8A4C] focus:ring-4 focus:ring-[#FF8A4C]/10'
+                }`}
+            />
+            <button type="button"
+              onClick={text.trim() ? handleSubmit : onGenerate}
+              disabled={loading || (!text.trim() && selectedItems.size === 0)}
+              className="absolute right-2.5 h-10 sm:h-11 px-5 sm:px-6
+                bg-[#FF8A4C] hover:bg-[#E86F32] active:bg-[#C74A00]
+                disabled:opacity-40 disabled:cursor-not-allowed
+                text-white font-semibold text-[14px]
+                rounded-xl shadow-md shadow-orange-300/30
+                transition-all flex items-center gap-2">
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <SparkleIcon />}
+              <span className="whitespace-nowrap">{text.trim() ? 'Add' : 'Find Recipes'}</span>
+            </button>
+          </div>
+        </form>
+
+        {/* Error / suggestion message */}
+        {inputError && (
+          <div className="mt-2.5 flex items-start gap-2 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/40 rounded-xl px-4 py-3">
+            <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm text-red-700 dark:text-red-400">{inputError.message}</p>
+              {inputError.suggestion && (
+                <button onClick={applySuggestion}
+                  className="mt-1.5 text-sm font-semibold text-[#FF8A4C] hover:text-[#E86F32] transition-colors">
+                  ✓ Yes, add "{inputError.suggestion}" →
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+        {inputSuccess && (
+          <div className="mt-2.5 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-xl px-4 py-2.5">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <p className="text-sm text-emerald-700 dark:text-emerald-400 font-medium">{inputSuccess}</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Quick add ───────────────────────────────────── */}
+      <div>
+        <h3 className="text-[13px] font-semibold text-stone-500 dark:text-stone-400 mb-3">
           Quick add
         </h3>
         <div className="flex flex-wrap gap-2.5">
@@ -175,23 +217,19 @@ export function IngredientInput({
                   ${active
                     ? 'bg-[#FFF1E8] dark:bg-[#FF8A4C]/15 border-[#FFC8A3] dark:border-[#FF8A4C]/40 text-[#C74A00] dark:text-orange-300'
                     : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-orange-300 hover:bg-orange-50/50'
-                  }`}
-              >
-                <span className="text-base">{emoji}</span>
-                {label}
+                  }`}>
+                <span className="text-base">{emoji}</span> {label}
               </button>
             );
           })}
           <button onClick={() => setShowMore(!showMore)}
             className="h-10 px-4 rounded-xl flex items-center gap-1.5 text-[13px] font-medium
               bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700
-              text-stone-500 dark:text-stone-400 hover:bg-stone-200/60 transition-colors"
-          >
+              text-stone-500 dark:text-stone-400 hover:bg-stone-200/60 transition-colors">
             More {showMore ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Expanded categories */}
         {showMore && (
           <div className="mt-5 space-y-5 pt-5 border-t border-stone-100 dark:border-stone-800">
             {ALL_CATEGORIES.map((cat) => (
@@ -206,8 +244,7 @@ export function IngredientInput({
                           ${active
                             ? 'bg-[#FFF1E8] dark:bg-[#FF8A4C]/15 border-[#FFC8A3] dark:border-[#FF8A4C]/40 text-[#C74A00] dark:text-orange-300'
                             : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-orange-200'
-                          }`}
-                      >
+                          }`}>
                         <span className="text-sm">{emoji}</span> {label}
                       </button>
                     );
@@ -219,12 +256,11 @@ export function IngredientInput({
         )}
       </div>
 
-      {/* ── Your fridge (selected items) ──────────────────────── */}
+      {/* ── Your fridge ─────────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-[15px] font-semibold text-stone-900 dark:text-stone-100">
-            Your fridge{' '}
-            <span className="text-stone-400 font-normal">({selectedItems.size})</span>
+            Your fridge <span className="text-stone-400 font-normal">({selectedItems.size})</span>
           </h3>
           {selectedItems.size > 0 && (
             <button onClick={onClearAll}
@@ -233,7 +269,6 @@ export function IngredientInput({
             </button>
           )}
         </div>
-
         {selectedItems.size === 0 ? (
           <div className="h-14 rounded-xl border-2 border-dashed border-stone-200 dark:border-stone-700
             flex items-center justify-center text-sm text-stone-400 dark:text-stone-500">
@@ -245,8 +280,7 @@ export function IngredientInput({
               <div key={item}
                 className="h-10 pl-3 pr-2.5 rounded-xl border border-[#FFC8A3] dark:border-[#FF8A4C]/30
                   bg-[#FFF1E8] dark:bg-[#FF8A4C]/10
-                  flex items-center gap-2 text-[13px] font-medium text-[#C74A00] dark:text-[#FFC8A3]"
-              >
+                  flex items-center gap-2 text-[13px] font-medium text-[#C74A00] dark:text-[#FFC8A3]">
                 <span className="text-base">{getEmoji(item)}</span>
                 <span className="capitalize">{item}</span>
                 <button onClick={() => onRemoveItem(item)}
@@ -259,7 +293,7 @@ export function IngredientInput({
         )}
       </div>
 
-      {/* ── Dietary preferences ───────────────────────────────── */}
+      {/* ── Dietary preferences ──────────────────────────── */}
       <div>
         <h3 className="text-[15px] font-semibold text-stone-900 dark:text-stone-100 mb-3">
           Dietary preferences
@@ -275,8 +309,7 @@ export function IngredientInput({
                   ${active
                     ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 shadow-sm shadow-emerald-200/50'
                     : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-500 dark:text-stone-400 hover:border-emerald-300 hover:bg-emerald-50/30'
-                  }`}
-              >
+                  }`}>
                 <span className="text-[22px]">{opt.icon}</span>
                 <span className="text-[11px] font-semibold leading-none">{opt.label}</span>
                 {active && (
@@ -295,7 +328,6 @@ export function IngredientInput({
   );
 }
 
-/* ── Sparkle icon (for the CTA button) ────────────────────── */
 function SparkleIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
