@@ -8,6 +8,25 @@ export default {
   theme: {
     extend: {
       colors: {
+        brand: {
+          50: '#FFF1E8',
+          100: '#FFE4D1',
+          200: '#FFC8A3',
+          300: '#FFAC75',
+          400: '#FF8A4C', // Primary
+          500: '#FF6D1F',
+          600: '#E86F32', // Primary dark
+          700: '#C74A00',
+          800: '#9E3B00',
+          900: '#7A2E00',
+        },
+        food: {
+          bg: '#FFFDF9', // Warm background
+          text: '#18181B', // Zinc 900
+          textMuted: '#71717A', // Zinc 500
+          border: '#E7E5E4', // Stone 200
+          card: '#FFFFFF',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
