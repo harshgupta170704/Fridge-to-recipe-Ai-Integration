@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Moon, Sun, UtensilsCrossed, RotateCcw } from 'lucide-react';
+import { Moon, Sun, ChefHat } from 'lucide-react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { IngredientInput } from './components/IngredientInput';
 import { FilterPanel } from './components/FilterPanel';
@@ -43,7 +43,6 @@ export default function App() {
         next.delete(item);
       } else {
         next.add(item);
-        // Check for conflicts with newly added item
         const isMeat = MEAT_ITEMS.some(m => item.toLowerCase().includes(m));
         const isNonVegan = NON_VEGAN_ITEMS.some(m => item.toLowerCase().includes(m));
 
@@ -70,7 +69,6 @@ export default function App() {
     setDietary(newDiet);
     setConflictWarning('');
 
-    // If setting a strict diet, remove conflicting ingredients
     if (newDiet === 'Vegetarian' || newDiet === 'Vegan' || newDiet === 'Jain') {
       setSelectedItems(prev => {
         const next = new Set(prev);
@@ -101,7 +99,13 @@ export default function App() {
     });
   }, []);
 
-  const handleGenerate = useCallback((ingredients) => {
+  const handleClearAll = useCallback(() => {
+    setSelectedItems(new Set());
+  }, []);
+
+  const handleGenerate = useCallback(() => {
+    if (selectedItems.size === 0) return;
+    const ingredients = [...selectedItems].join(', ');
     let prefs = dietary || '';
     if (excludedItems.size > 0) {
       const exclusionStr = `Do NOT use these ingredients: ${[...excludedItems].join(', ')}`;
@@ -110,7 +114,7 @@ export default function App() {
     setLastIngredients(ingredients);
     setLastDietaryPrefs(prefs);
     generateRecipe(ingredients, prefs);
-  }, [dietary, excludedItems, generateRecipe]);
+  }, [selectedItems, dietary, excludedItems, generateRecipe]);
 
   const handleRetry = useCallback(() => {
     if (lastIngredients) {
@@ -133,53 +137,61 @@ export default function App() {
   const selectedArray = [...selectedItems];
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
-      {/* Minimal Header */}
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <UtensilsCrossed className="w-5 h-5" />
-            <h1 className="font-semibold tracking-tight">Fridge to Recipe</h1>
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors duration-200">
+      {/* Figma-style Header */}
+      <header className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 h-[72px] flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 cursor-pointer" onClick={recipe ? clearRecipe : undefined}>
+              <div className="text-[#FF8A4C]">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+              </div>
+              <h1 className="text-xl font-bold tracking-tight text-stone-800 dark:text-white">
+                Fridge<span className="text-[#FF8A4C]">Chef</span>
+              </h1>
+            </div>
+            <div className="hidden sm:block h-6 w-px bg-stone-200 dark:bg-stone-700"></div>
+            <p className="hidden sm:block text-sm text-stone-500 dark:text-stone-400 font-medium">
+              Turn your fridge into a feast
+            </p>
           </div>
-          <div className="flex items-center gap-1">
-            {recipe && (
-              <button 
-                onClick={handleClear} 
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground rounded-md"
-              >
-                <RotateCcw className="w-4 h-4" /> 
-                <span className="hidden sm:inline">New Recipe</span>
-              </button>
-            )}
+          
+          <div className="flex items-center bg-stone-100 dark:bg-stone-800 rounded-full p-1 border border-stone-200 dark:border-stone-700">
             <button
-              onClick={toggleDarkMode}
-              className="inline-flex items-center justify-center w-9 h-9 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground rounded-md"
-              aria-label="Toggle theme"
+              onClick={() => {if (darkMode) toggleDarkMode();}}
+              className={`p-1.5 rounded-full transition-all ${!darkMode ? 'bg-white shadow-sm text-amber-500' : 'text-stone-400 hover:text-stone-300'}`}
             >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              <Sun className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => {if (!darkMode) toggleDarkMode();}}
+              className={`p-1.5 rounded-full transition-all ${darkMode ? 'bg-stone-700 shadow-sm text-stone-100' : 'text-stone-400 hover:text-stone-500'}`}
+            >
+              <Moon className="w-4 h-4" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main Content Container - narrower for a focused reading experience */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12 relative">
-        {/* Floating Conflict Warning */}
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 md:py-10 relative">
         {conflictWarning && (
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-4 py-2 rounded-full text-sm font-medium shadow-md flex items-center gap-2 animate-slide-up z-50 border border-amber-200 dark:border-amber-800">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium shadow-md flex items-center gap-2 animate-slide-up z-50">
             <span>⚠️</span> {conflictWarning}
           </div>
         )}
 
         {!recipe && !loading && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            <div className="lg:col-span-8 space-y-8">
               <IngredientInput
                 onGenerate={handleGenerate}
                 loading={loading}
                 selectedItems={selectedItems}
                 onToggleItem={toggleItem}
                 onRemoveItem={removeItem}
+                onClearAll={handleClearAll}
+                dietary={dietary}
+                onDietaryChange={handleDietaryChange}
               />
             </div>
             <div className="lg:col-span-4">
@@ -187,16 +199,13 @@ export default function App() {
                 selectedIngredients={selectedArray}
                 excludedItems={excludedItems}
                 onExcludedChange={setExcludedItems}
-                dietary={dietary}
-                onDietaryChange={handleDietaryChange}
-                onRemoveIngredient={removeItem}
               />
             </div>
           </div>
         )}
 
         {loading && (
-          <div className="py-12">
+          <div className="py-20 flex justify-center">
             <LoadingState />
           </div>
         )}
@@ -208,7 +217,7 @@ export default function App() {
         )}
 
         {recipe && !loading && (
-          <div className="py-6">
+          <div className="py-4">
             <ErrorBoundary>
               <RecipeCard
                 recipe={recipe}
